@@ -22,7 +22,7 @@ const Routes = [
   },
   {
     name: "Pioche",
-    path: "/pioche",
+    path: "/dashboard/pioche",
     icon: PickaxeIcon,
   },
   {

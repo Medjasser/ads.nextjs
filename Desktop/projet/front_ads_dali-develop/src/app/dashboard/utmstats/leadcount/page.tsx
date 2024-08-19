@@ -1,6 +1,5 @@
 import SelectionBar from "@/components/leadcount/SelectionBar";
-import BodyLeadCount from "@/components/leadcount/BodyLeadCount";
-
+import Stat from "@/components/leadcount/Stat";
 import {
   Card,
   CardContent,
@@ -31,7 +30,11 @@ export default function Page() {
                 <CardTitle>Lead Count</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <BodyLeadCount />
+              <Stat />
+              <Card className="col-span-2">
+        <CardContent className="space-y-2">
+        </CardContent>
+      </Card>
               </CardContent>
             </Card>
           </TabsContent>

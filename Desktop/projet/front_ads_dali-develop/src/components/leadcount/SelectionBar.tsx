@@ -23,31 +23,26 @@ export default function SelectionBar({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
+    from: new Date(2024, 0, 20),
+    to: addDays(new Date(2024, 0, 20), 20),
   });
   const [verticals, setVerticals] = React.useState<any[]>([]);
 
   const getToken = () => {
     const token = localStorage.getItem("token");
-    console.log("token", token);
     if (token) {
-      try {
-        return JSON.parse(token);
-      } catch (error) {
-        console.error("Error parsing token:", error);
-        return null;
-      }
+      return token;
+    } else {
+      throw new Error("No token available");
     }
-    throw new Error("No token available");
   };
-
   React.useEffect(() => {
+    console.log("useEffect triggered");
     const fetchVerticals = async () => {
       try {
         const token = getToken();
-        
-        if (token) {console.log("token", token);
+        console.log("token", token);
+        if (token) {
           const formdata = new FormData();
           formdata.append("Hipto-Authorization", token);
           const requestOptions = {
@@ -70,9 +65,13 @@ export default function SelectionBar({
 
     fetchVerticals();
   }, []);
-
   return (
-    <div className={cn("grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4", className)}>
+    <div
+      className={cn(
+        "grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4",
+        className
+      )}
+    >
       <Select>
         <SelectTrigger className="w-[280px]">
           <SelectValue placeholder="Select a vertical" />

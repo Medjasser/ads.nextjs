@@ -1,5 +1,5 @@
 "use client";
-import "../../../components/leadcount/style/lead.css";
+import "../../components/leadcount/style/lead.css";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
@@ -41,7 +41,7 @@ export default function Stat() {
         <CardContent className="space-y-2">
           <div className="flex justify-around text-black">
           <div className="flex flex-col items-center">
-          <ChartContainer config={chartConfig} className="h-[400px] w-full">
+          <ChartContainer config={chartConfig} className="min-h-[325px] w-full">
             <BarChart accessibilityLayer data={chartData}>
               <CartesianGrid vertical={false} />
               <XAxis
