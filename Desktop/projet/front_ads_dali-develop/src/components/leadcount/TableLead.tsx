@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+"use client";
 
+import React from 'react';
 import {
   Table,
   TableBody,
@@ -12,51 +13,72 @@ import {
 } from "@/components/ui/table";
 import Swal from 'sweetalert2';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BASE_URL, api_version } from '../../../app/dashboard/utmstats/config/config';
 
+interface TableProps {
+  selectedVertical?: string;
+  dateRange?: { from: Date; to: Date };
+}
 
-export default async function TableLead({ selectedVerticalId, selectedDateFrom, selectedDateTo, onDataUpdate }) {
-  const [tableData, setTableData] = useState([]);
-  async function fetchTableData() {
+export default function TableLead({ selectedVertical, dateRange }: TableProps) {
+  const [ChannelData, setChannelData] = React.useState<any[]>([]);
+  const [SNData, setSNData] = React.useState<any[]>([]);
+
+  const getToken = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      return token;
+    } else {
+      Swal.fire('Error', 'No token available', 'error');
+      throw new Error("No token available");
+    }
+  };
+
+  async function fetchData(url: string, token: string) {
+    const formdata = new FormData();
+    formdata.append('Hipto-Authorization', token);
+
+    const requestOptions = {
+      method: 'POST',
+      body: formdata,
+    };
+
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No token available');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/${process.env.NEXT_PUBLIC_API_VERSION}${url}`, requestOptions);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
       }
-
-      const accessToken = JSON.parse(token).access_token;
-      const formdata = new FormData();
-      formdata.append('Hipto-Authorization', accessToken);
-
-      const requestOptions = {
-        method: 'POST',
-        body: formdata,
-      };
-
-      const response = await fetch(
-        `${BASE_URL}/${api_version}/report/socialNetworks?vertical_id=${selectedVerticalId}&from=${selectedDateFrom}&to=${selectedDateTo}`,
-        requestOptions,
-      );
-
       const responseData = await response.json();
-      const dataArray = Array.isArray(responseData) ? responseData : [responseData];
-
-      onDataUpdate(dataArray);
-      setTableData(dataArray);
+      return Array.isArray(responseData) ? responseData : [responseData];
     } catch (error) {
-      handleError(error);
+      Swal.fire('Error', `Failed to fetch data: ${error.message}`, 'error');
+      throw error;
     }
   }
-  const handleError = (error) => {
-    Swal.fire({
-      icon: 'error',
-      text: 'Erreur lors de la récupération des données ! ',
-      width: '30%',
-      confirmButtonText: "Ok, j'ai compris!",
-      confirmButtonColor: '#0095E8',
-    });
-    setError('Erreur lors de la récupération des données.');
-  };
+
+  React.useEffect(() => {
+    async function fetchDataForLeads(url: string, setStateFunction: React.Dispatch<React.SetStateAction<any[]>>) {
+      try {
+        const token = getToken();
+        const data = await fetchData(url, token);
+        setStateFunction(data);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    if (selectedVertical && dateRange) {
+      const { from, to } = dateRange;
+      fetchDataForLeads(
+        `/report/socialNetworks?vertical_id=${selectedVertical}&from=${from.toISOString()}&to=${to.toISOString()}`,
+        setChannelData,
+      );
+      fetchDataForLeads(
+        `/report/channels?vertical_id=${selectedVertical}&from=${from.toISOString()}&to=${to.toISOString()}`,
+        setSNData,
+      );
+    }
+  }, [selectedVertical, dateRange]);
+
   return (
     <div className="pt-8">
       <Tabs defaultValue="canal">
@@ -76,14 +98,15 @@ export default async function TableLead({ selectedVerticalId, selectedDateFrom, 
               </TableRow>
             </TableHeader>
             <TableBody>
-                <TableRow >
-                  <TableCell className="font-medium">
-                  </TableCell>
-                  <TableCell>{}</TableCell>
-                  <TableCell>{}</TableCell>
-                  <TableCell>{}</TableCell>
-                  <TableCell>-</TableCell>
+              {ChannelData?.canal?.map((item, index) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium">{item.name}</TableCell>
+                  <TableCell>{item.lead}</TableCell>
+                  <TableCell>{item.cpl}</TableCell>
+                  <TableCell>{item.depenses}</TableCell>
+                  <TableCell>{item.tx_marge}</TableCell>
                 </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TabsContent>
@@ -99,15 +122,15 @@ export default async function TableLead({ selectedVerticalId, selectedDateFrom, 
               </TableRow>
             </TableHeader>
             <TableBody>
-                <TableRow >
-                  <TableCell className="font-medium">
-                    {}
-                  </TableCell>
-                  <TableCell>{}</TableCell>
-                  <TableCell>{}</TableCell>
-                  <TableCell>{}</TableCell>
-                  <TableCell>-</TableCell>
+              {SNData?.plateform?.map((item, index) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium">{item.name}</TableCell>
+                  <TableCell>{item.lead}</TableCell>
+                  <TableCell>{item.cpl}</TableCell>
+                  <TableCell>{item.depenses}</TableCell>
+                  <TableCell>{item.tx_marge}</TableCell>
                 </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TabsContent>

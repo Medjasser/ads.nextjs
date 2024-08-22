@@ -1,4 +1,5 @@
 "use client";
+
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, FileSymlink, Calendar as CalendarIcon } from "lucide-react";
@@ -19,15 +20,20 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export default function SelectionBar({
-  className,
-}: React.HTMLAttributes<HTMLDivElement>) {
+interface SelectionBarProps {
+  onRecalculate: (selectedVertical: string, dateRange: { from: Date; to: Date }) => void;
+  className?: string;
+}
+
+export default function SelectionBar({ className, onRecalculate }: SelectionBarProps) {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: new Date(2024, 0, 20),
     to: addDays(new Date(2024, 0, 20), 20),
   });
   const [verticals, setVerticals] = React.useState<any[]>([]);
+  const [selectedVertical, setSelectedVertical] = React.useState<string | undefined>();
 
+  // Function to fetch the token
   const getToken = () => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -36,12 +42,12 @@ export default function SelectionBar({
       throw new Error("No token available");
     }
   };
+
+  // Fetching verticals on component mount
   React.useEffect(() => {
-    console.log("useEffect triggered");
     const fetchVerticals = async () => {
       try {
         const token = getToken();
-        console.log("token", token);
         if (token) {
           const formdata = new FormData();
           formdata.append("Hipto-Authorization", token);
@@ -65,6 +71,16 @@ export default function SelectionBar({
 
     fetchVerticals();
   }, []);
+
+  // Function to handle recalculate button click
+  const handleRecalculate = () => {
+    if (selectedVertical && date?.from && date?.to) {
+      onRecalculate(selectedVertical, { from: date.from, to: date.to });
+    } else {
+      alert("Please select a vertical and a date range.");
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -72,7 +88,7 @@ export default function SelectionBar({
         className
       )}
     >
-      <Select>
+      <Select onValueChange={setSelectedVertical}>
         <SelectTrigger className="w-[280px]">
           <SelectValue placeholder="Select a vertical" />
         </SelectTrigger>
@@ -123,7 +139,7 @@ export default function SelectionBar({
         </Popover>
       </div>
       <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
-        <Button style={{ backgroundColor: "#5D87FF" }}>
+        <Button style={{ backgroundColor: "#5D87FF" }} onClick={handleRecalculate}>
           <RefreshCw className="mr-2 h-4 w-4" />
           Recalculer
         </Button>
