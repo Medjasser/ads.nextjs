@@ -24,6 +24,7 @@ const NestedTable = () => {
     { name: "Snapchat", logo: "/images/logos/snapchat.png" },
     { name: "Taboola", logo: "/images/logos/taboola.png" },
     { name: "Tiktok", logo: "/images/logos/tiktok.jpg" },
+    { name: "Bing", logo: "/images/logos/bing.png" },
   ];
   const handleRowClick = (id: string) => {
     setOpenRows((prev) => ({
@@ -308,7 +309,7 @@ const NestedTable = () => {
       <div className="overflow-x-auto">
         <Table className="min-w-full bg-white table-fixed">
           {/* Table headers */}
-          <TableRow className="bg-gray-300">
+          <TableRow className="bg-[#D44200]">
             <TableCell className="w-1/5 px-4 py-2">Name Account</TableCell>
             <TableCell className="w-1/5 px-4 py-2">ON/OFF</TableCell>
             <TableCell className="w-1/5 px-4 py-2">Id</TableCell>
@@ -370,7 +371,7 @@ const NestedTable = () => {
             {sortedData.map((item) => (
               <>
                 <React.Fragment key={item.id}>
-                  <TableRow className="cursor-pointer hover:bg-gray-100">
+                  <TableRow className="cursor-pointer bg-[#f4cebd] hover:bg-[#f4cebd] ">
                     <TableCell className="border-t border-gray-300 px-4 py-2">
                       <button
                         className="flex items-center"
@@ -431,7 +432,7 @@ const NestedTable = () => {
                   {openRows[item.id] && (
                     <>
                       {/* New Level 2 Header */}
-                      <TableRow className="bg-gray-300">
+                      <TableRow className="bg-[#168BC4]">
                         <TableCell className="w-1/5 px-8 py-2">Name</TableCell>
                         <TableCell className="w-1/5 px-4 py-2">
                           ON/OFF
@@ -460,7 +461,7 @@ const NestedTable = () => {
 
                       {item.subData.map((subItem) => (
                         <React.Fragment key={subItem.id}>
-                          <TableRow className="cursor-pointer hover:bg-gray-200 bg-gray-100">
+                          <TableRow className="cursor-pointer bg-[#e3f1f8] hover:bg-[#e3f1f8]">
                             <TableCell className="border-t border-gray-300 px-4 py-2 pl-8">
                               <button
                                 className="flex items-center"
@@ -523,7 +524,7 @@ const NestedTable = () => {
                           {openRows[subItem.id] && (
                             <>
                               {/* New Level 3 Header */}
-                              <TableRow className="bg-gray-300">
+                              <TableRow className="bg-[#E7A33D]">
                                 <TableCell className="w-1/5 px-8 py-2">
                                   Name
                                 </TableCell>
@@ -559,7 +560,7 @@ const NestedTable = () => {
                               {subItem.subSubData.map((subSubItem) => (
                                 <TableRow
                                   key={subSubItem.id}
-                                  className="cursor-pointer hover:bg-gray-200 bg-gray-200"
+                                  className="cursor-pointer bg-[#f8e4c6] hover:bg-[#f8e4c6]"
                                 >
                                   <TableCell className="border-t border-gray-300 px-4 py-2 pl-12">
                                     {subSubItem.name}
