@@ -12,12 +12,14 @@ import {
 import Swal from "sweetalert2";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from 'next/image';
+
 interface TableProps {
   selectedVertical?: string;
   dateRange?: { from: Date; to: Date };
+  onSnDataUpdate?: (data: any[]) => void; // Callback to pass SNData to parent
 }
 
-export default function TableLead({ selectedVertical, dateRange }: TableProps) {
+export default function TableLead({ selectedVertical, dateRange, onSnDataUpdate }: TableProps) {
   const [ChannelData, setChannelData] = React.useState<any[]>([]);
   const [SNData, setSNData] = React.useState<any[]>([]);
 
@@ -142,6 +144,9 @@ export default function TableLead({ selectedVertical, dateRange }: TableProps) {
             },
           ];
           setSNData(transformedData);
+          if (onSnDataUpdate) {
+            onSnDataUpdate(data); // Notify parent component
+          }
         } else {
           setStateFunction(data);
         }
@@ -162,7 +167,7 @@ export default function TableLead({ selectedVertical, dateRange }: TableProps) {
       );
     }
   }, [selectedVertical, dateRange]);
-  console.log(SNData);
+
   return (
     <div className="pt-8">
       <Tabs defaultValue="canal">
@@ -233,12 +238,12 @@ export default function TableLead({ selectedVertical, dateRange }: TableProps) {
                       }}
                     >
                       <Image
-            src={item.logo}
-            alt={item.name}
-            width={35}
-            height={35}
-            style={{ marginRight: "10px" }}
-          />
+                        src={item.logo}
+                        alt={item.name}
+                        width={35}
+                        height={35}
+                        style={{ marginRight: "10px" }}
+                      />
                       {item.name}
                     </div>
                   </TableCell>

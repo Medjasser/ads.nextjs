@@ -3,17 +3,18 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, FileSymlink, Calendar as CalendarIcon } from "lucide-react";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  MultiSelector,
+  MultiSelectorTrigger,
+  MultiSelectorInput,
+  MultiSelectorContent,
+  MultiSelectorList,
+  MultiSelectorItem,
+} from "@/components/extension/multi-select";
 import {
   Popover,
   PopoverContent,
@@ -26,9 +27,16 @@ interface Vertical {
 }
 
 interface SelectionBarProps {
-  onRecalculate: (selectedVertical: Vertical, dateRange: { from: Date; to: Date }) => void;
+  onRecalculate: (selectedVerticals: Vertical[], dateRange: { from: Date; to: Date }) => void;
   className?: string;
 }
+
+const options = [
+  { label: "Vertical 1", value: "vertical1" },
+  { label: "Vertical 2", value: "vertical2" },
+  { label: "Vertical 3", value: "vertical3" },
+  // Add more options as needed
+];
 
 export default function SelectionBar({ className, onRecalculate }: SelectionBarProps) {
   const today = new Date();
@@ -37,7 +45,7 @@ export default function SelectionBar({ className, onRecalculate }: SelectionBarP
     to: today,
   });
   const [verticals, setVerticals] = React.useState<Vertical[]>([]);
-  const [selectedVertical, setSelectedVertical] = React.useState<Vertical | undefined>();
+  const [selectedVerticals, setSelectedVerticals] = React.useState<Vertical[]>([]);
 
   // Fetching verticals on component mount
   React.useEffect(() => {
@@ -68,32 +76,49 @@ export default function SelectionBar({ className, onRecalculate }: SelectionBarP
     fetchVerticals();
   }, []);
 
+  // Convert verticals to options format for MultiSelector
+  const verticalOptions = verticals.map(v => ({
+    label: v.vertical_code,
+    value: v.vertical_id,
+  }));
+
   const handleRecalculate = () => {
-    if (selectedVertical && date?.from && date?.to) {
+    if (selectedVerticals.length > 0 && date?.from && date?.to) {
       const formattedFromDate = format(date.from, 'yyyy-MM-dd');
       const formattedToDate = format(date.to, 'yyyy-MM-dd');
       const fromDate = new Date(formattedFromDate);
       const toDate = new Date(formattedToDate);
       
-      onRecalculate(selectedVertical, { from: fromDate, to: toDate });
+      onRecalculate(selectedVerticals, { from: fromDate, to: toDate });
     } else {
-      alert("Please select a vertical and a date range.");
+      alert("Please select at least one vertical and a date range.");
     }
   };
+
   return (
     <div className={cn("grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4", className)}>
-      <Select onValueChange={(value) => setSelectedVertical(verticals.find(v => v.vertical_id === value))}>
-        <SelectTrigger className="w-[280px]">
-          <SelectValue placeholder="Select a vertical" />
-        </SelectTrigger>
-        <SelectContent>
-          {verticals.map((vertical) => (
-            <SelectItem key={vertical.vertical_id} value={vertical.vertical_id}>
-              {vertical.vertical_code}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <MultiSelector
+        values={selectedVerticals.map(v => v.vertical_id)}
+        onValuesChange={selectedValues => {
+          const selected = verticals.filter(v => selectedValues.includes(v.vertical_id));
+          setSelectedVerticals(selected);
+        }}
+        loop={false}
+      >
+        <MultiSelectorTrigger>
+          <MultiSelectorInput placeholder="Select verticals" />
+        </MultiSelectorTrigger>
+        <MultiSelectorContent>
+          <MultiSelectorList>
+            {verticalOptions.map((option, i) => (
+              <MultiSelectorItem key={i} value={option.value}>
+                {option.label}
+              </MultiSelectorItem>
+            ))}
+          </MultiSelectorList>
+        </MultiSelectorContent>
+      </MultiSelector>
+
       <div className={cn("grid gap-2", className)}>
         <Popover>
           <PopoverTrigger asChild>
@@ -132,6 +157,7 @@ export default function SelectionBar({ className, onRecalculate }: SelectionBarP
           </PopoverContent>
         </Popover>
       </div>
+
       <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
         <Button style={{ backgroundColor: "#5D87FF" }} onClick={handleRecalculate}>
           <RefreshCw className="mr-2 h-4 w-4" />
