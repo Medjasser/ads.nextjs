@@ -38,13 +38,12 @@ export default function Selection({
   });
 
   return (
-      <Card className="w-[350px]">
+      <Card >
         <CardHeader>
           <CardTitle>Sélection</CardTitle>
           <hr className="border-t border-gray-300 mt-2" />
         </CardHeader>
         <CardContent>
-          <form>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="name" className="text-gray-500">Période</Label>
@@ -54,7 +53,7 @@ export default function Selection({
                       id="date"
                       variant="outline"
                       className={cn(
-                        "w-[300px] justify-start text-left font-normal",
+                        "w-full justify-start text-left font-normal",
                         !date && "text-muted-foreground"
                       )}
                     >
@@ -88,12 +87,12 @@ export default function Selection({
               <div className="flex flex-col space-y-2">
                 <Label htmlFor="framework" className="text-gray-500">Heure</Label>  
               </div>
-              <div className="flex space-x-14">
-                <div className="flex flex-col space-y-2">
+              <div className="flex space-x-2">
+                <div className="flex w-[50%] flex-col space-y-2">
                   <Label htmlFor="time" className="text-gray-500">De :</Label>
                   <Input type="time" id="time" placeholder="De" />
                 </div>
-                <div className="flex flex-col space-y-2">
+                <div className="flex w-[50%] flex-col space-y-2">
                   <Label htmlFor="time" className="text-gray-500">à :</Label>
                   <Input type="time" id="time" placeholder="à" />
                 </div>
@@ -121,7 +120,6 @@ export default function Selection({
                   </SelectContent>
                 </Select>
             </div>
-          </form>
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button >Recalculer</Button>

@@ -20,34 +20,30 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+interface Vertical {
+  vertical_id: string;
+  vertical_code: string;
+}
+
 interface SelectionBarProps {
-  onRecalculate: (selectedVertical: string, dateRange: { from: Date; to: Date }) => void;
+  onRecalculate: (selectedVertical: Vertical, dateRange: { from: Date; to: Date }) => void;
   className?: string;
 }
 
 export default function SelectionBar({ className, onRecalculate }: SelectionBarProps) {
+  const today = new Date();
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2024, 0, 20),
-    to: addDays(new Date(2024, 0, 20), 20),
+    from: today,
+    to: today,
   });
-  const [verticals, setVerticals] = React.useState<any[]>([]);
-  const [selectedVertical, setSelectedVertical] = React.useState<string | undefined>();
-
-  // Function to fetch the token
-  const getToken = () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      return token;
-    } else {
-      throw new Error("No token available");
-    }
-  };
+  const [verticals, setVerticals] = React.useState<Vertical[]>([]);
+  const [selectedVertical, setSelectedVertical] = React.useState<Vertical | undefined>();
 
   // Fetching verticals on component mount
   React.useEffect(() => {
     const fetchVerticals = async () => {
       try {
-        const token = getToken();
+        const token = localStorage.getItem("token");
         if (token) {
           const formdata = new FormData();
           formdata.append("Hipto-Authorization", token);
@@ -72,23 +68,21 @@ export default function SelectionBar({ className, onRecalculate }: SelectionBarP
     fetchVerticals();
   }, []);
 
-  // Function to handle recalculate button click
   const handleRecalculate = () => {
     if (selectedVertical && date?.from && date?.to) {
-      onRecalculate(selectedVertical, { from: date.from, to: date.to });
+      const formattedFromDate = format(date.from, 'yyyy-MM-dd');
+      const formattedToDate = format(date.to, 'yyyy-MM-dd');
+      const fromDate = new Date(formattedFromDate);
+      const toDate = new Date(formattedToDate);
+      
+      onRecalculate(selectedVertical, { from: fromDate, to: toDate });
     } else {
       alert("Please select a vertical and a date range.");
     }
   };
-
   return (
-    <div
-      className={cn(
-        "grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4",
-        className
-      )}
-    >
-      <Select onValueChange={setSelectedVertical}>
+    <div className={cn("grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4", className)}>
+      <Select onValueChange={(value) => setSelectedVertical(verticals.find(v => v.vertical_id === value))}>
         <SelectTrigger className="w-[280px]">
           <SelectValue placeholder="Select a vertical" />
         </SelectTrigger>

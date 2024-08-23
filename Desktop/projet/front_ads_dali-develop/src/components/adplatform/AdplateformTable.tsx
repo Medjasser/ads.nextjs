@@ -1,34 +1,29 @@
-'use client';
-import { useState } from 'react';
+"use client";
+import { useState } from "react";
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-} from '@/components/ui/table';
-import { ChevronDownIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
-import { Switch } from '@headlessui/react';
-import React from 'react';
+} from "@/components/ui/table";
+import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { Switch } from "@headlessui/react";
+import React from "react";
 // Importation des images
-import facebookLogo from '../../assets/images/logos/facebook.png';
-import googleLogo from '../../assets/images/logos/google.png';
-import outbrainLogo from '../../assets/images/logos/outbrain.png';
-import snapchatLogo from '../../assets/images/logos/snapchat.png';
-import taboolaLogo from '../../assets/images/logos/taboola.png';
-import tiktokLogo from '../../assets/images/logos/tiktok.jpg';
+import Image from 'next/image';
 
 const NestedTable = () => {
   const [openRows, setOpenRows] = useState<{ [key: string]: boolean }>({});
   const [activeRows, setActiveRows] = useState<{ [key: string]: boolean }>({});
-  const [selectedPlatform, setSelectedPlatform] = useState<string>('Facebook');
+  const [selectedPlatform, setSelectedPlatform] = useState<string>("Facebook");
   const platforms = [
-    { name: 'Facebook', logo: facebookLogo },
-    { name: 'Google', logo: googleLogo },
-    { name: 'Outbrain', logo: outbrainLogo },
-    { name: 'Snapchat', logo: snapchatLogo },
-    { name: 'Taboola', logo: taboolaLogo },
-    { name: 'Tiktok', logo: tiktokLogo },
+    { name: "Facebook", logo: "/images/logos/facebook.png" },
+    { name: "Google", logo: "/images/logos/google.png" },
+    { name: "Outbrain", logo: "/images/logos/outbrain.png" },
+    { name: "Snapchat", logo: "/images/logos/snapchat.png" },
+    { name: "Taboola", logo: "/images/logos/taboola.png" },
+    { name: "Tiktok", logo: "/images/logos/tiktok.jpg" },
   ];
   const handleRowClick = (id: string) => {
     setOpenRows((prev) => ({
@@ -56,7 +51,7 @@ const NestedTable = () => {
     cpm: number;
     tc: number;
   };
-  
+
   type SubData = {
     id: string;
     name: string;
@@ -69,7 +64,7 @@ const NestedTable = () => {
     tc: number;
     subSubData: SubSubData[];
   };
-  
+
   type DataItem = {
     id: string;
     platform: string;
@@ -87,59 +82,148 @@ const NestedTable = () => {
   const data: DataItem[] = [
     // Sample data with different platforms
     {
-      id: '1',
-      platform: 'Facebook',
-      name: 'BEL_INS_DOG',
-      campaign: 'VOLUME_02/08',
+      id: "1",
+      platform: "Facebook",
+      name: "BEL_INS_DOG",
+      campaign: "VOLUME_02/08",
       lead: 18,
       depenses: 223.28,
-      cpl: 12.80,
-      ctr: 13.80,
-      cpm: 14.80,
-      tc: 15.80,
+      cpl: 12.8,
+      ctr: 13.8,
+      cpm: 14.8,
+      tc: 15.8,
       subData: [
         {
-          id: '1.1',
-          name: 'BEL_DOG',
-          adset: '20 - 65 +',
+          id: "1.1",
+          name: "BEL_DOG",
+          adset: "20 - 65 +",
           lead: 20,
           depenses: 255.79,
           cpl: 20.57,
-          ctr: 11.80,
-          cpm: 11.80,
-          tc: 11.80,
+          ctr: 11.8,
+          cpm: 11.8,
+          tc: 11.8,
           subSubData: [
-            { id: '1.1.1', name: 'BEL_DOG_', ad: 'IMG--AGE--STD--WIN_COULO...', lead: 18, depenses: 249.06, cpl: 13.84, ctr: 11.80, cpm: 11.80, tc: 11.80 },
-            { id: '1.1.2', name: 'BEL_DOG', ad: 'IMG--ARG--STD--MAX_ARGUM...', lead: 1, depenses: 2.55, cpl: 2.55, ctr: 11.80, cpm: 11.80, tc: 11.80 },
+            {
+              id: "1.1.1",
+              name: "BEL_DOG_",
+              ad: "IMG--AGE--STD--WIN_COULO...",
+              lead: 18,
+              depenses: 249.06,
+              cpl: 13.84,
+              ctr: 11.8,
+              cpm: 11.8,
+              tc: 11.8,
+            },
+            {
+              id: "1.1.2",
+              name: "BEL_DOG",
+              ad: "IMG--ARG--STD--MAX_ARGUM...",
+              lead: 1,
+              depenses: 2.55,
+              cpl: 2.55,
+              ctr: 11.8,
+              cpm: 11.8,
+              tc: 11.8,
+            },
           ],
         },
       ],
     },
     {
-      id: '2',
-      platform: 'Google',
-      name: 'BEL_INS_DOG',
-      campaign: 'VOLUME_02/08',
-      lead: 19,
-      depenses: 224.28,
-      cpl: 11.80,
-      ctr: 11.80,
-      cpm: 11.80,
-      tc: 11.80,
+      id: "2",
+      platform: "Facebook",
+      name: "BEL_INS_DOG",
+      campaign: "VOLUME_02/08",
+      lead: 18,
+      depenses: 222.28,
+      cpl: 13.8,
+      ctr: 15.8,
+      cpm: 10.8,
+      tc: 9.8,
       subData: [
         {
-          id: '2.1',
-          name: 'BEL_DOG',
-          adset: '20 - 65 +',
+          id: "1.1",
+          name: "BEL_DOG",
+          adset: "20 - 65 +",
           lead: 20,
           depenses: 255.79,
           cpl: 20.57,
-          ctr: 11.80,
-          cpm: 11.80,
-          tc: 11.80,
+          ctr: 11.8,
+          cpm: 11.8,
+          tc: 11.8,
           subSubData: [
-            { id: '2.1.1', name: 'BEL_DOG_', ad: 'IMG--AGE--STD--WIN_COULO...', lead: 18, depenses: 249.06, cpl: 13.84, ctr: 11.80, cpm: 11.80, tc: 11.80 },
-            { id: '2.1.2', name: 'BEL_DOG', ad: 'IMG--ARG--STD--MAX_ARGUM...', lead: 1, depenses: 2.55, cpl: 2.55, ctr: 11.80, cpm: 11.80, tc: 11.80 },
+            {
+              id: "1.1.1",
+              name: "BEL_DOG_",
+              ad: "IMG--AGE--STD--WIN_COULO...",
+              lead: 18,
+              depenses: 249.06,
+              cpl: 13.84,
+              ctr: 11.8,
+              cpm: 11.8,
+              tc: 11.8,
+            },
+            {
+              id: "1.1.2",
+              name: "BEL_DOG",
+              ad: "IMG--ARG--STD--MAX_ARGUM...",
+              lead: 1,
+              depenses: 2.55,
+              cpl: 2.55,
+              ctr: 11.8,
+              cpm: 11.8,
+              tc: 11.8,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "2",
+      platform: "Google",
+      name: "BEL_INS_DOG",
+      campaign: "VOLUME_02/08",
+      lead: 19,
+      depenses: 224.28,
+      cpl: 11.8,
+      ctr: 11.8,
+      cpm: 11.8,
+      tc: 11.8,
+      subData: [
+        {
+          id: "2.1",
+          name: "BEL_DOG",
+          adset: "20 - 65 +",
+          lead: 20,
+          depenses: 255.79,
+          cpl: 20.57,
+          ctr: 11.8,
+          cpm: 11.8,
+          tc: 11.8,
+          subSubData: [
+            {
+              id: "2.1.1",
+              name: "BEL_DOG_",
+              ad: "IMG--AGE--STD--WIN_COULO...",
+              lead: 18,
+              depenses: 249.06,
+              cpl: 13.84,
+              ctr: 11.8,
+              cpm: 11.8,
+              tc: 11.8,
+            },
+            {
+              id: "2.1.2",
+              name: "BEL_DOG",
+              ad: "IMG--ARG--STD--MAX_ARGUM...",
+              lead: 1,
+              depenses: 2.55,
+              cpl: 2.55,
+              ctr: 11.8,
+              cpm: 11.8,
+              tc: 11.8,
+            },
           ],
         },
       ],
@@ -147,9 +231,14 @@ const NestedTable = () => {
   ];
 
   // Filter data based on selected platform
-  const filteredData = data.filter(item => item.platform === selectedPlatform);
+  const filteredData = data.filter(
+    (item) => item.platform === selectedPlatform
+  );
 
-  const [sortConfig, setSortConfig] = useState<{ key: keyof DataItem; direction: 'asc' | 'desc' } | null>(null);
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof DataItem;
+    direction: "asc" | "desc";
+  } | null>(null);
 
   const sortedData = React.useMemo(() => {
     let sortableItems = [...filteredData];
@@ -157,10 +246,10 @@ const NestedTable = () => {
       sortableItems.sort((a, b) => {
         const key = sortConfig.key as keyof DataItem;
         if (a[key] < b[key]) {
-          return sortConfig.direction === 'asc' ? -1 : 1;
+          return sortConfig.direction === "asc" ? -1 : 1;
         }
         if (a[key] > b[key]) {
-          return sortConfig.direction === 'asc' ? 1 : -1;
+          return sortConfig.direction === "asc" ? 1 : -1;
         }
         return 0;
       });
@@ -169,13 +258,13 @@ const NestedTable = () => {
   }, [filteredData, sortConfig]);
 
   const requestSort = (key: keyof DataItem) => {
-    let direction: 'asc' | 'desc' = 'asc';
+    let direction: "asc" | "desc" = "asc";
     if (
       sortConfig &&
       sortConfig.key === key &&
-      sortConfig.direction === 'asc'
+      sortConfig.direction === "asc"
     ) {
-      direction = 'desc';
+      direction = "desc";
     }
     setSortConfig({ key, direction });
   };
@@ -188,11 +277,19 @@ const NestedTable = () => {
           <button
             key={platform.name}
             onClick={() => setSelectedPlatform(platform.name)}
-            className={`flex items-center justify-center px-6 py-3 m-2 w-40 h-20 rounded-lg transition-colors duration-200 ${
-              selectedPlatform === platform.name ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+            className={`flex items-center justify-center px-6 py-3 m-2 w-30 h-15 rounded-lg transition-colors duration-200 ${
+              selectedPlatform === platform.name
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 text-gray-700"
             }`}
           >
-            <img src={platform.logo} alt={`${platform.name} logo`} className="h-10 w-10 mr-3" />
+            <Image
+              src={platform.logo}
+              alt={`${platform.name} logo`}
+              className="h-5 w-5 mr-3"
+              width={35}
+            height={35}
+            />
             <span className="text-lg">{platform.name}</span>
           </button>
         ))}
@@ -207,62 +304,93 @@ const NestedTable = () => {
             <TableCell className="w-1/5 px-4 py-2">Id</TableCell>
             <TableCell className="w-1/5 px-4 py-2">Campaign</TableCell>
             <TableCell className="w-1/5 px-4 py-2">Lead</TableCell>
-            <TableCell className="w-1/5 px-4 py-2"><button onClick={() => requestSort('depenses')}>
-              DEPENSES (€)
-              {sortConfig?.key === 'depenses' ? (
-                sortConfig.direction === 'asc' ? ' 🔼' : ' 🔽'
-              ) : null}
-            </button></TableCell>
-            <TableCell className="w-1/5 px-4 py-2"><button onClick={() => requestSort('cpl')}>
-              CPL (€)
-              {sortConfig?.key === 'cpl' ? (
-                sortConfig.direction === 'asc' ? ' 🔼' : ' 🔽'
-              ) : null}
-            </button></TableCell>
-            <TableCell className="w-1/5 px-4 py-2"><button onClick={() => requestSort('ctr')}>
-              CTR (€)
-              {sortConfig?.key === 'ctr' ? (
-                sortConfig.direction === 'asc' ? ' 🔼' : ' 🔽'
-              ) : null}
-            </button></TableCell>
-            <TableCell className="w-1/5 px-4 py-2"><button onClick={() => requestSort('cpm')}>
-              CPM (€)
-              {sortConfig?.key === 'cpm' ? (
-                sortConfig.direction === 'asc' ? ' 🔼' : ' 🔽'
-              ) : null}
-            </button></TableCell>
-            <TableCell className="w-1/5 px-4 py-2"><button onClick={() => requestSort('tc')}>
-              TC (€)
-              {sortConfig?.key === 'tc' ? (
-                sortConfig.direction === 'asc' ? ' 🔼' : ' 🔽'
-              ) : null}
-            </button></TableCell>
+            <TableCell className="w-1/5 px-4 py-2">
+              <button onClick={() => requestSort("depenses")}>
+                DEPENSES (€)
+                {sortConfig?.key === "depenses"
+                  ? sortConfig.direction === "asc"
+                    ? " 🔼"
+                    : " 🔽"
+                  : null}
+              </button>
+            </TableCell>
+            <TableCell className="w-1/5 px-4 py-2">
+              <button onClick={() => requestSort("cpl")}>
+                CPL (€)
+                {sortConfig?.key === "cpl"
+                  ? sortConfig.direction === "asc"
+                    ? " 🔼"
+                    : " 🔽"
+                  : null}
+              </button>
+            </TableCell>
+            <TableCell className="w-1/5 px-4 py-2">
+              <button onClick={() => requestSort("ctr")}>
+                CTR (€)
+                {sortConfig?.key === "ctr"
+                  ? sortConfig.direction === "asc"
+                    ? " 🔼"
+                    : " 🔽"
+                  : null}
+              </button>
+            </TableCell>
+            <TableCell className="w-1/5 px-4 py-2">
+              <button onClick={() => requestSort("cpm")}>
+                CPM (€)
+                {sortConfig?.key === "cpm"
+                  ? sortConfig.direction === "asc"
+                    ? " 🔼"
+                    : " 🔽"
+                  : null}
+              </button>
+            </TableCell>
+            <TableCell className="w-1/5 px-4 py-2">
+              <button onClick={() => requestSort("tc")}>
+                TC (€)
+                {sortConfig?.key === "tc"
+                  ? sortConfig.direction === "asc"
+                    ? " 🔼"
+                    : " 🔽"
+                  : null}
+              </button>
+            </TableCell>
           </TableRow>
 
           <TableBody>
             {sortedData.map((item) => (
+              <>
               <React.Fragment key={item.id}>
                 <TableRow
                   className="cursor-pointer hover:bg-gray-100"
-                  onClick={() => handleRowClick(item.id)}
+                  
                 >
                   <TableCell className="border-t border-gray-300 px-4 py-2">
+                  <button
+                    className="flex items-center"
+                    onClick={() => handleRowClick(item.id)}
+                  >
+                    {openRows[item.id] ? (
+                      <ChevronDownIcon className="h-5 w-5 mr-2" />
+                    ) : (
+                      <ChevronRightIcon className="h-5 w-5 mr-2" />
+                    )}
                     {item.name}
+                  </button>
                   </TableCell>
                   <TableCell className="border-t border-gray-300 px-4 py-2">
-                    <Switch
-                      checked={!!activeRows[item.id]}
-                      onChange={() => handleToggle(item.id)}
+                  <Switch
+                    checked={activeRows[item.id] || false}
+                    onChange={() => handleToggle(item.id)}
+                    className={`${
+                      activeRows[item.id] ? 'bg-green-500' : 'bg-gray-200'
+                    } relative inline-flex h-6 w-11 items-center rounded-full`}
+                  >
+                    <span
                       className={`${
-                        activeRows[item.id] ? 'bg-blue-500' : 'bg-gray-300'
-                      } relative inline-flex items-center h-6 rounded-full w-11`}
-                    >
-                      <span
-                        className={`${
-                          activeRows[item.id] ? 'translate-x-6' : 'translate-x-1'
-                        } inline-block w-4 h-4 transform bg-white rounded-full`}
-                      />
-                    </Switch>
+                        activeRows[item.id] ? 'translate-x-6' : 'translate-x-1'
+                      } inline-block h-4 w-4 transform bg-white rounded-full transition`}
+                    />
+                  </Switch>
                   </TableCell>
                   <TableCell className="border-t border-gray-300 px-4 py-2">
                     {item.id}
@@ -291,117 +419,186 @@ const NestedTable = () => {
                 </TableRow>
 
                 {/* SubData Rows */}
-                {openRows[item.id] &&
-                  item.subData.map((subItem) => (
-                    <React.Fragment key={subItem.id}>
-                      <TableRow
-                        className="cursor-pointer hover:bg-gray-200 bg-gray-100"
-                        onClick={() => handleRowClick(subItem.id)}
-                      >
-                        <TableCell className="border-t border-gray-300 px-4 py-2 pl-8">
-                          {subItem.name}
-                        </TableCell>
-                        <TableCell className="border-t border-gray-300 px-4 py-2">
-                          <Switch
-                            checked={!!activeRows[subItem.id]}
-                            onChange={() => handleToggle(subItem.id)}
-                            className={`${
-                              activeRows[subItem.id] ? 'bg-blue-500' : 'bg-gray-300'
-                            } relative inline-flex items-center h-6 rounded-full w-11`}
-                          >
-                            <span
+                {openRows[item.id] && (
+                  <>
+                    {/* New Level 2 Header */}
+                    <TableRow className="bg-gray-300">
+                      <TableCell className="w-1/5 px-8 py-2">Name</TableCell>
+                      <TableCell className="w-1/5 px-4 py-2">ON/OFF</TableCell>
+                      <TableCell className="w-1/5 px-4 py-2">Id</TableCell>
+                      <TableCell className="w-1/5 px-4 py-2">Ad Set</TableCell>
+                      <TableCell className="w-1/5 px-4 py-2">Lead</TableCell>
+                      <TableCell className="w-1/5 px-4 py-2">
+                        DEPENSES (€)
+                      </TableCell>
+                      <TableCell className="w-1/5 px-4 py-2">CPL (€)</TableCell>
+                      <TableCell className="w-1/5 px-4 py-2">CTR (€)</TableCell>
+                      <TableCell className="w-1/5 px-4 py-2">CPM (€)</TableCell>
+                      <TableCell className="w-1/5 px-4 py-2">TC (€)</TableCell>
+                    </TableRow>
+
+                    {item.subData.map((subItem) => (
+                      <React.Fragment key={subItem.id}>
+                        <TableRow
+                          className="cursor-pointer hover:bg-gray-200 bg-gray-100"
+                          
+                        >
+                          <TableCell className="border-t border-gray-300 px-4 py-2 pl-8">
+                          <button
+                    className="flex items-center"
+                    onClick={() => handleRowClick(subItem.id)}
+                  >
+                    {openRows[subItem.id] ? (
+                      <ChevronDownIcon className="h-5 w-5 mr-2" />
+                    ) : (
+                      <ChevronRightIcon className="h-5 w-5 mr-2" />
+                    )}
+                    {subItem.name}
+                  </button>
+                          </TableCell>
+                          <TableCell className="border-t border-gray-300 px-4 py-2">
+                            <Switch
+                              checked={!!activeRows[subItem.id]}
+                              onChange={() => handleToggle(subItem.id)}
                               className={`${
                                 activeRows[subItem.id]
-                                  ? 'translate-x-6'
-                                  : 'translate-x-1'
-                              } inline-block w-4 h-4 transform bg-white rounded-full`}
-                            />
-                          </Switch>
-                        </TableCell>
-                        <TableCell className="border-t border-gray-300 px-4 py-2">
-                          {subItem.id}
-                        </TableCell>
-                        <TableCell className="border-t border-gray-300 px-4 py-2">
-                          {subItem.adset}
-                        </TableCell>
-                        <TableCell className="border-t border-gray-300 px-4 py-2">
-                          {subItem.lead}
-                        </TableCell>
-                        <TableCell className="border-t border-gray-300 px-4 py-2">
-                          {subItem.depenses}
-                        </TableCell>
-                        <TableCell className="border-t border-gray-300 px-4 py-2">
-                          {subItem.cpl}
-                        </TableCell>
-                        <TableCell className="border-t border-gray-300 px-4 py-2">
-                          {subItem.ctr}
-                        </TableCell>
-                        <TableCell className="border-t border-gray-300 px-4 py-2">
-                          {subItem.cpm}
-                        </TableCell>
-                        <TableCell className="border-t border-gray-300 px-4 py-2">
-                          {subItem.tc}
-                        </TableCell>
-                      </TableRow>
-
-                      {/* SubSubData Rows */}
-                      {openRows[subItem.id] &&
-                        subItem.subSubData.map((subSubItem) => (
-                          <TableRow
-                            key={subSubItem.id}
-                            className="cursor-pointer hover:bg-gray-200 bg-gray-200"
-                          >
-                            <TableCell className="border-t border-gray-300 px-4 py-2 pl-12">
-                              {subSubItem.name}
-                            </TableCell>
-                            <TableCell className="border-t border-gray-300 px-4 py-2">
-                              <Switch
-                                checked={!!activeRows[subSubItem.id]}
-                                onChange={() => handleToggle(subSubItem.id)}
+                                  ? "bg-blue-500"
+                                  : "bg-gray-300"
+                              } relative inline-flex items-center h-6 rounded-full w-11`}
+                            >
+                              <span
                                 className={`${
-                                  activeRows[subSubItem.id]
-                                    ? 'bg-blue-500'
-                                    : 'bg-gray-300'
-                                } relative inline-flex items-center h-6 rounded-full w-11`}
+                                  activeRows[subItem.id]
+                                    ? "translate-x-6"
+                                    : "translate-x-1"
+                                } inline-block w-4 h-4 transform bg-white rounded-full`}
+                              />
+                            </Switch>
+                          </TableCell>
+                          <TableCell className="border-t border-gray-300 px-4 py-2">
+                            {subItem.id}
+                          </TableCell>
+                          <TableCell className="border-t border-gray-300 px-4 py-2">
+                            {subItem.adset}
+                          </TableCell>
+                          <TableCell className="border-t border-gray-300 px-4 py-2">
+                            {subItem.lead}
+                          </TableCell>
+                          <TableCell className="border-t border-gray-300 px-4 py-2">
+                            {subItem.depenses}
+                          </TableCell>
+                          <TableCell className="border-t border-gray-300 px-4 py-2">
+                            {subItem.cpl}
+                          </TableCell>
+                          <TableCell className="border-t border-gray-300 px-4 py-2">
+                            {subItem.ctr}
+                          </TableCell>
+                          <TableCell className="border-t border-gray-300 px-4 py-2">
+                            {subItem.cpm}
+                          </TableCell>
+                          <TableCell className="border-t border-gray-300 px-4 py-2">
+                            {subItem.tc}
+                          </TableCell>
+                        </TableRow>
+
+                        {/* SubSubData Rows */}
+                        {openRows[subItem.id] && (
+                          <>
+                            {/* New Level 3 Header */}
+                            <TableRow className="bg-gray-300">
+                              <TableCell className="w-1/5 px-8 py-2">
+                                Name
+                              </TableCell>
+                              <TableCell className="w-1/5 px-4 py-2">
+                                ON/OFF
+                              </TableCell>
+                              <TableCell className="w-1/5 px-4 py-2">
+                                Id
+                              </TableCell>
+                              <TableCell className="w-1/5 px-4 py-2">
+                                Ad
+                              </TableCell>
+                              <TableCell className="w-1/5 px-4 py-2">
+                                Lead
+                              </TableCell>
+                              <TableCell className="w-1/5 px-4 py-2">
+                                DEPENSES (€)
+                              </TableCell>
+                              <TableCell className="w-1/5 px-4 py-2">
+                                CPL (€)
+                              </TableCell>
+                              <TableCell className="w-1/5 px-4 py-2">
+                                CTR (€)
+                              </TableCell>
+                              <TableCell className="w-1/5 px-4 py-2">
+                                CPM (€)
+                              </TableCell>
+                              <TableCell className="w-1/5 px-4 py-2">
+                                TC (€)
+                              </TableCell>
+                            </TableRow>
+
+                            {subItem.subSubData.map((subSubItem) => (
+                              <TableRow
+                                key={subSubItem.id}
+                                className="cursor-pointer hover:bg-gray-200 bg-gray-200"
                               >
-                                <span
-                                  className={`${
-                                    activeRows[subSubItem.id]
-                                      ? 'translate-x-6'
-                                      : 'translate-x-1'
-                                  } inline-block w-4 h-4 transform bg-white rounded-full`}
-                                />
-                              </Switch>
-                            </TableCell>
-                            <TableCell className="border-t border-gray-300 px-4 py-2">
-                              {subSubItem.id}
-                            </TableCell>
-                            <TableCell className="border-t border-gray-300 px-4 py-2">
-                              {subSubItem.ad}
-                            </TableCell>
-                            <TableCell className="border-t border-gray-300 px-4 py-2">
-                              {subSubItem.lead}
-                            </TableCell>
-                            <TableCell className="border-t border-gray-300 px-4 py-2">
-                              {subSubItem.depenses}
-                            </TableCell>
-                            <TableCell className="border-t border-gray-300 px-4 py-2">
-                              {subSubItem.cpl}
-                            </TableCell>
-                            <TableCell className="border-t border-gray-300 px-4 py-2">
-                              {subSubItem.ctr}
-                            </TableCell>
-                            <TableCell className="border-t border-gray-300 px-4 py-2">
-                              {subSubItem.cpm}
-                            </TableCell>
-                            <TableCell className="border-t border-gray-300 px-4 py-2">
-                              {subSubItem.tc}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </React.Fragment>
-                  ))}
+                                <TableCell className="border-t border-gray-300 px-4 py-2 pl-12">
+                                  {subSubItem.name}
+                                </TableCell>
+                                <TableCell className="border-t border-gray-300 px-4 py-2">
+                                  <Switch
+                                    checked={!!activeRows[subSubItem.id]}
+                                    onChange={() => handleToggle(subSubItem.id)}
+                                    className={`${
+                                      activeRows[subSubItem.id]
+                                        ? "bg-blue-500"
+                                        : "bg-gray-300"
+                                    } relative inline-flex items-center h-6 rounded-full w-11`}
+                                  >
+                                    <span
+                                      className={`${
+                                        activeRows[subSubItem.id]
+                                          ? "translate-x-6"
+                                          : "translate-x-1"
+                                      } inline-block w-4 h-4 transform bg-white rounded-full`}
+                                    />
+                                  </Switch>
+                                </TableCell>
+                                <TableCell className="border-t border-gray-300 px-4 py-2">
+                                  {subSubItem.id}
+                                </TableCell>
+                                <TableCell className="border-t border-gray-300 px-4 py-2">
+                                  {subSubItem.ad}
+                                </TableCell>
+                                <TableCell className="border-t border-gray-300 px-4 py-2">
+                                  {subSubItem.lead}
+                                </TableCell>
+                                <TableCell className="border-t border-gray-300 px-4 py-2">
+                                  {subSubItem.depenses}
+                                </TableCell>
+                                <TableCell className="border-t border-gray-300 px-4 py-2">
+                                  {subSubItem.cpl}
+                                </TableCell>
+                                <TableCell className="border-t border-gray-300 px-4 py-2">
+                                  {subSubItem.ctr}
+                                </TableCell>
+                                <TableCell className="border-t border-gray-300 px-4 py-2">
+                                  {subSubItem.cpm}
+                                </TableCell>
+                                <TableCell className="border-t border-gray-300 px-4 py-2">
+                                  {subSubItem.tc}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </>
+                )}
               </React.Fragment>
+              </>
             ))}
           </TableBody>
         </Table>
