@@ -19,25 +19,33 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
+import "./style/selection.css";
 interface Vertical {
   vertical_id: string;
   vertical_code: string;
 }
 
 interface SelectionBarProps {
-  onRecalculate: (selectedVertical: Vertical, dateRange: { from: Date; to: Date }) => void;
+  onRecalculate: (
+    selectedVerticals: Vertical[],
+    dateRange: { from: Date; to: Date }
+  ) => void;
   className?: string;
 }
 
-export default function SelectionBar({ className, onRecalculate }: SelectionBarProps) {
+export default function SelectionBar({
+  className,
+  onRecalculate,
+}: SelectionBarProps) {
   const today = new Date();
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: today,
     to: today,
   });
   const [verticals, setVerticals] = React.useState<Vertical[]>([]);
-  const [selectedVertical, setSelectedVertical] = React.useState<Vertical | undefined>();
+  const [selectedVerticals, setSelectedVerticals] = React.useState<Vertical[]>(
+    []
+  );
 
   // Fetching verticals on component mount
   React.useEffect(() => {
@@ -69,26 +77,60 @@ export default function SelectionBar({ className, onRecalculate }: SelectionBarP
   }, []);
 
   const handleRecalculate = () => {
-    if (selectedVertical && date?.from && date?.to) {
-      const formattedFromDate = format(date.from, 'yyyy-MM-dd');
-      const formattedToDate = format(date.to, 'yyyy-MM-dd');
+    if (selectedVerticals.length > 0 && date?.from && date?.to) {
+      const formattedFromDate = format(date.from, "yyyy-MM-dd");
+      const formattedToDate = format(date.to, "yyyy-MM-dd");
       const fromDate = new Date(formattedFromDate);
       const toDate = new Date(formattedToDate);
-      
-      onRecalculate(selectedVertical, { from: fromDate, to: toDate });
+
+      onRecalculate(selectedVerticals, { from: fromDate, to: toDate });
     } else {
-      alert("Please select a vertical and a date range.");
+      alert("Please select one or more verticals and a date range.");
     }
   };
+
+  const handleVerticalChange = (verticalId: string) => {
+    setSelectedVerticals((prevSelected) => {
+      const alreadySelected = prevSelected.find(
+        (v) => v.vertical_id === verticalId
+      );
+      if (alreadySelected) {
+        return prevSelected.filter((v) => v.vertical_id !== verticalId);
+      } else {
+        const selectedVertical = verticals.find(
+          (v) => v.vertical_id === verticalId
+        );
+        return selectedVertical
+          ? [...prevSelected, selectedVertical]
+          : prevSelected;
+      }
+    });
+  };
+
   return (
-    <div className={cn("grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4", className)}>
-      <Select onValueChange={(value) => setSelectedVertical(verticals.find(v => v.vertical_id === value))}>
+    <div
+      className={cn(
+        "grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4",
+        className
+      )}
+    >
+      <Select onValueChange={handleVerticalChange}>
         <SelectTrigger className="w-[280px]">
-          <SelectValue placeholder="Select a vertical" />
+          <SelectValue placeholder="Select verticals">
+            {selectedVerticals.map((v) => v.vertical_code).join(", ") ||
+              "Select verticals"}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
           {verticals.map((vertical) => (
-            <SelectItem key={vertical.vertical_id} value={vertical.vertical_id}>
+            <SelectItem
+              key={vertical.vertical_id}
+              value={vertical.vertical_id}
+              className="remove-check-icon"
+            >
+              {selectedVerticals.some(
+                (v) => v.vertical_id === vertical.vertical_id
+              )}
               {vertical.vertical_code}
             </SelectItem>
           ))}
@@ -133,13 +175,16 @@ export default function SelectionBar({ className, onRecalculate }: SelectionBarP
         </Popover>
       </div>
       <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
-        <Button style={{ backgroundColor: "#5D87FF" }} onClick={handleRecalculate}>
+        <Button
+          style={{ backgroundColor: "#5D87FF" }}
+          onClick={handleRecalculate}
+        >
           <RefreshCw className="mr-2 h-4 w-4" />
-          Recalculer
+          Recalculate
         </Button>
         <Button style={{ backgroundColor: "#22b16e" }}>
           <FileSymlink className="mr-2 h-4 w-4" />
-          Exporter
+          Export
         </Button>
       </div>
     </div>

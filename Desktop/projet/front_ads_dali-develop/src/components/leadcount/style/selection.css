@@ -1,0 +1,5 @@
+
+.remove-check-icon[data-state="checked"]::before {
+    content: "";
+    display: none; /* Hide the checkmark */
+  }
