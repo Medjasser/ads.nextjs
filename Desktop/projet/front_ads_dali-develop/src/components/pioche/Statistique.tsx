@@ -1,3 +1,6 @@
+"use client";
+
+import * as React from "react";
 import {
   Card,
   CardContent,
@@ -7,6 +10,37 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 export default function Statistique() {
+  const [LogoSocialNetworks, setLogoSocialNetworks] =  React.useState<any[]>([]);
+  const [LogoChannels, setLogoChannels] =  React.useState<any[]>([]);
+    // Fetching SocialNetworks on component mount
+    React.useEffect(() => {
+      const fetchSocialNetworks = async () => {
+        try {
+          const token = localStorage.getItem("token");
+          if (token) {
+            const formdata = new FormData();
+            formdata.append("Hipto-Authorization", token);
+            const requestOptions = {
+              method: "POST",
+              body: formdata,
+            };
+            const response = await fetch(
+              `${process.env.NEXT_PUBLIC_BASE_URL}/${process.env.NEXT_PUBLIC_API_VERSION}/social_networks`,
+              requestOptions
+            );
+            const data = await response.json();
+            setLogoSocialNetworks(data);
+          } else {
+            console.error("Token is null or invalid");
+          }
+        } catch (error) {
+          console.error("Error fetching SocialNetworks:", error);
+        }
+      };
+  
+      fetchSocialNetworks();
+    }, []);
+    
   return (
     <Card>
       <CardHeader>

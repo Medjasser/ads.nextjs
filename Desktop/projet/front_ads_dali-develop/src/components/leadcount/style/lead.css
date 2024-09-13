@@ -17,3 +17,6 @@
     text-align: center;
     padding-top: 14px;
 }
+.min-h-50p {
+    min-height: 50%;
+  }

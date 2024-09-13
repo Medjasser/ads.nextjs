@@ -1,8 +1,14 @@
-"use client";
 import * as React from "react";
 import "../../components/leadcount/style/lead.css";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  ResponsiveContainer,
+} from "recharts";
 import {
   ChartConfig,
   ChartContainer,
@@ -18,7 +24,7 @@ interface StatProps {
   dateRange?: { from: Date; to: Date };
   sndata?: any;
 }
-// Define types for API data
+
 interface LeadData {
   current: number;
   yesterday: number;
@@ -26,100 +32,78 @@ interface LeadData {
   yesterweek: number;
   yesterweek_perc: number;
 }
-export default function Stat({ selectedVertical, dateRange, sndata }: StatProps) {
-  const [leadsCollectes, setLeadsCollectes] = React.useState<LeadData[]>([]);
-  const [leadsLivres, setLeadsLivres] = React.useState<LeadData[]>([]);
-  const [chartDataIncoming, setChartDataIncoming] =React.useState<any[]>([]);
-  const [chartDataOutgoing, setChartDataOutgoing] =React.useState<any[]>([]);
-   // Function to fetch the token
-   const getToken = () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      return token;
-    } else {
-      throw new Error("No token available");
-    }
+
+const fetchData = async (url: string, token: string) => {
+  const formdata = new FormData();
+  formdata.append("Hipto-Authorization", token);
+
+  const requestOptions = {
+    method: "POST",
+    body: formdata,
   };
 
-  // Fetch data from API
-  async function fetchData(url: string, token: string) {
-    const formdata = new FormData();
-    formdata.append('Hipto-Authorization', token);
-
-    const requestOptions = {
-      method: 'POST',
-      body: formdata,
-    };
-
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/${process.env.NEXT_PUBLIC_API_VERSION}${url}`, requestOptions);
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-      const responseData = await response.json();
-      return Array.isArray(responseData) ? responseData : [responseData];
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      throw error; // Re-throw to be handled by the component
-    }
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/${process.env.NEXT_PUBLIC_API_VERSION}${url}`,
+      requestOptions
+    );
+    if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
   }
+};
 
-  // Fetch data when dependencies change
+const Stat: React.FC<StatProps> = ({ selectedVertical, dateRange, sndata }) => {
+  const [leadsCollectes, setLeadsCollectes] = React.useState<LeadData[]>([]);
+  const [leadsLivres, setLeadsLivres] = React.useState<LeadData[]>([]);
+  const [chartDataIncoming, setChartDataIncoming] = React.useState<any[]>([]);
+  const [chartDataOutgoing, setChartDataOutgoing] = React.useState<any[]>([]);
+
   React.useEffect(() => {
-    async function fetchDataForLeads(url: string, setStateFunction: React.Dispatch<React.SetStateAction<any[]>>) {
-      try {
-        const token = getToken();
-        const data = await fetchData(url, token);
-        setStateFunction(data);
-      } catch (error) {
-        console.error('Error:', error);
-        // Optionally show user-friendly error messages here
-      }
-    }
-
     if (selectedVertical && dateRange) {
       const { from, to } = dateRange;
-      fetchDataForLeads(
-        `/leads/incoming/compareHourlyPerformance?vertical_id=${selectedVertical}&from=${from.toISOString()}&to=${to.toISOString()}`,
-        setLeadsCollectes,
-      );
-      fetchDataForLeads(
-        `/leads/outgoing/compareHourlyPerformance?vertical_id=${selectedVertical}&from=${from.toISOString()}&to=${to.toISOString()}`,
-        setLeadsLivres,
-      );
-    }
-  }, [selectedVertical, dateRange]);
-  React.useEffect(() => {
-    async function fetchDataForCharts(url: string, setStateFunction: React.Dispatch<React.SetStateAction<any[]>>) {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          throw new Error('No token available');
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        console.error("No token available");
+        return;
+      }
+
+      const fetchDataForLeads = async () => {
+        try {
+          const [incomingData, outgoingData] = await Promise.all([
+            fetchData(`/leads/incoming/compareHourlyPerformance?vertical_id=${selectedVertical}&from=${from.toISOString()}&to=${to.toISOString()}`, token),
+            fetchData(`/leads/outgoing/compareHourlyPerformance?vertical_id=${selectedVertical}&from=${from.toISOString()}&to=${to.toISOString()}`, token),
+          ]);
+          setLeadsCollectes(incomingData);
+          setLeadsLivres(outgoingData);
+        } catch (error) {
+          console.error("Error fetching leads data:", error);
         }
-        const data = await fetchData(url, token);
-        setStateFunction(data);
-      } catch (error) {
-        console.error('Error:', error);
-        // Optionally show user-friendly error messages here
-      }
-    }
-    if (selectedVertical && dateRange) {
-      const { from, to } = dateRange;
-      fetchDataForCharts(
-        `/leads/incoming/hours?vertical_id=${selectedVertical}&from=${from.toISOString()}&to=${to.toISOString()}`,
-        setChartDataIncoming,
-      );
-      fetchDataForCharts(
-        `/leads/outgoing/hours?vertical_id=${selectedVertical}&from=${from.toISOString()}&to=${to.toISOString()}`,
-        setChartDataOutgoing,
-      );
+      };
+
+      const fetchDataForCharts = async () => {
+        try {
+          const [incomingChartData, outgoingChartData] = await Promise.all([
+            fetchData(`/leads/incoming/hours?vertical_id=${selectedVertical}&from=${from.toISOString()}&to=${to.toISOString()}`, token),
+            fetchData(`/leads/outgoing/hours?vertical_id=${selectedVertical}&from=${from.toISOString()}&to=${to.toISOString()}`, token),
+          ]);
+          setChartDataIncoming(incomingChartData);
+          setChartDataOutgoing(outgoingChartData);
+        } catch (error) {
+          console.error("Error fetching chart data:", error);
+        }
+      };
+
+      fetchDataForLeads();
+      fetchDataForCharts();
     }
   }, [selectedVertical, dateRange]);
 
   const combinedChartData = chartDataIncoming.map((incomingItem) => {
-    const outgoingItem = chartDataOutgoing.find(
-      (outgoingItem) => outgoingItem.hour === incomingItem.hour,
-    );
+    const outgoingItem = chartDataOutgoing.find((outgoingItem) => outgoingItem.hour === incomingItem.hour);
     return {
       hour: incomingItem.hour,
       incoming: incomingItem.count,
@@ -127,20 +111,14 @@ export default function Stat({ selectedVertical, dateRange, sndata }: StatProps)
     };
   });
 
-const chartConfig = {
-  incoming: {
-    label: "Collectés",
-    color: "#6BEAA6",
-  },
-  outgoing: {
-    label: "Livrés",
-    color: "#60a5fa",
-  },
-};
-  // Extract values from leadsCollectes and leadsLivres
+  const chartConfig: ChartConfig = {
+    incoming: { label: "Collectés", color: "#6BEAA6" },
+    outgoing: { label: "Livrés", color: "#60a5fa" },
+  };
+
   const leadsCollectesValues = leadsCollectes[0] || {};
-  const leadsLivresValues = leadsLivres || {};
-  console.log(sndata);
+  const leadsLivresValues = leadsLivres[0] || {};
+
   return (
     <div className="grid grid-cols-3 gap-4">
       <Card className="col-span-2">
@@ -148,33 +126,47 @@ const chartConfig = {
           <h2>Collecte/Livraison Jour courant</h2>
         </CardHeader>
         <CardContent>
-          <div className="flex justify-around text-black">
-            <div className="flex flex-col items-center">
-              <ChartContainer config={chartConfig} className="min-h-[350px] w-full">
-                <BarChart data={combinedChartData}>
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="hour"
-                    tickLine={false}
-                    tickMargin={10}
-                    axisLine={false}
-                    tickFormatter={(value) => value.slice(0, 3)}
-                  />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <ChartLegend content={<ChartLegendContent />} />
-                  <Bar dataKey="incoming" fill={chartConfig.incoming.color} radius={4} />
-                  <Bar dataKey="outgoing" fill={chartConfig.outgoing.color} radius={4} />
-                </BarChart>
+          <div className="text-black">
+            <div className="inline-block align-top w-3/4">
+              <ChartContainer config={chartConfig} className="h-[410px] w-full">
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart data={combinedChartData}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis
+                      dataKey="hour"
+                      tickLine={false}
+                      tickMargin={10}
+                      axisLine={false}
+                      tickFormatter={(value) => `${value}h`}
+                    />
+                      <YAxis
+                      domain={[0, 100]}
+                      ticks={[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]}
+                    />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <ChartLegend content={<ChartLegendContent />} />
+                    <Bar
+                      dataKey="incoming"
+                      fill={chartConfig.incoming.color}
+                      radius={4}
+                    />
+                    <Bar
+                      dataKey="outgoing"
+                      fill={chartConfig.outgoing.color}
+                      radius={4}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
               </ChartContainer>
             </div>
-            <div className="flex flex-col">
-  <span>LEADS COLLECTÉS</span>
-  <p className="mb-5">{sndata && sndata[0] ? sndata[0].global : "0"}</p>
-  <span>CPL</span>
-  <p className="mb-5">{sndata && sndata[0] ? sndata[0].global_cpl : "0,00 €"}</p>
-  <span>DÉPENSES</span>
-  <p className="mb-5">{sndata && sndata[0] ? sndata[0].global_expenses : "0,00 €"}</p>
-</div>
+            <div className="inline-block align-top w-1/5 pl-4">
+              <span className="block">LEADS COLLECTÉS</span>
+              <p className="mb-5">{sndata?.[0]?.global ?? "0"}</p>
+              <span className="block">CPL</span>
+              <p className="mb-5">{sndata?.[0]?.global_cpl ?? "0,00 €"}</p>
+              <span className="block">DÉPENSES</span>
+              <p className="mb-5">{sndata?.[0]?.global_expenses ?? "0,00 €"}</p>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -190,8 +182,8 @@ const chartConfig = {
               <span>Leads Collectés</span>
             </div>
             <div className="flex flex-col items-center gap-2">
-              <span className="circle2">{leadsLivresValues[0]?.yesterday || 0}</span>
-              <span> ({leadsLivresValues[0]?.yesterday_perc || 0}%)</span>
+              <span className="circle2">{leadsLivresValues.yesterday || 0}</span>
+              <span> ({leadsLivresValues.yesterday_perc || 0}%)</span>
               <span>Leads Livrés</span>
             </div>
           </CardContent>
@@ -207,8 +199,8 @@ const chartConfig = {
               <span>Leads Collectés</span>
             </div>
             <div className="flex flex-col items-center gap-2">
-              <span className="circle2">{leadsLivresValues[0]?.yesterweek || 0}</span>
-              <span> ({leadsLivresValues[0]?.yesterweek_perc || 0}%)</span>
+              <span className="circle2">{leadsLivresValues.yesterweek || 0}</span>
+              <span> ({leadsLivresValues.yesterweek_perc || 0}%)</span>
               <span>Leads Livrés</span>
             </div>
           </CardContent>
@@ -216,4 +208,6 @@ const chartConfig = {
       </div>
     </div>
   );
-}
+};
+
+export default Stat;

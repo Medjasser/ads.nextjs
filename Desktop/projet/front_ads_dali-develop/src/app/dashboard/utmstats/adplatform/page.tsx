@@ -16,7 +16,7 @@ export default function Page() {
 
   return (
     <main className="flex flex-col justify-between p-10">
-      <span className="font-bold pb-2">Lead Count</span>
+      <span className="font-bold pb-2">AD Platform</span>
       <SelectionBar onRecalculate={handleRecalculate} />
       <div className="pt-8">
         <Card>

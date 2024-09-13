@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, FileSymlink, Calendar as CalendarIcon } from "lucide-react";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
@@ -19,7 +19,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import "./style/selection.css";
+
 interface Vertical {
   vertical_id: string;
   vertical_code: string;
@@ -84,8 +84,6 @@ export default function SelectionBar({
       const toDate = new Date(formattedToDate);
 
       onRecalculate(selectedVerticals, { from: fromDate, to: toDate });
-    } else {
-      alert("Please select one or more verticals and a date range.");
     }
   };
 
@@ -123,11 +121,7 @@ export default function SelectionBar({
         </SelectTrigger>
         <SelectContent>
           {verticals.map((vertical) => (
-            <SelectItem
-              key={vertical.vertical_id}
-              value={vertical.vertical_id}
-              className="remove-check-icon"
-            >
+            <SelectItem key={vertical.vertical_id} value={vertical.vertical_id}>
               {selectedVerticals.some(
                 (v) => v.vertical_id === vertical.vertical_id
               )}
@@ -136,6 +130,7 @@ export default function SelectionBar({
           ))}
         </SelectContent>
       </Select>
+
       <div className={cn("grid gap-2", className)}>
         <Popover>
           <PopoverTrigger asChild>
@@ -149,7 +144,7 @@ export default function SelectionBar({
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
               {date?.from ? (
-                date.to ? (
+                date.to && date.from.getTime() !== date.to.getTime() ? (
                   <>
                     {format(date.from, "LLL dd, y")} -{" "}
                     {format(date.to, "LLL dd, y")}
@@ -174,6 +169,7 @@ export default function SelectionBar({
           </PopoverContent>
         </Popover>
       </div>
+
       <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
         <Button
           style={{ backgroundColor: "#5D87FF" }}

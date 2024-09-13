@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/table";
 import Swal from "sweetalert2";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Image from 'next/image';
+import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
 
 interface TableProps {
   selectedVertical?: string;
@@ -19,7 +20,11 @@ interface TableProps {
   onSnDataUpdate?: (data: any[]) => void; // Callback to pass SNData to parent
 }
 
-export default function TableLead({ selectedVertical, dateRange, onSnDataUpdate }: TableProps) {
+export default function TableLead({
+  selectedVertical,
+  dateRange,
+  onSnDataUpdate,
+}: TableProps) {
   const [ChannelData, setChannelData] = React.useState<any[]>([]);
   const [SNData, setSNData] = React.useState<any[]>([]);
 
@@ -205,10 +210,26 @@ export default function TableLead({ selectedVertical, dateRange, onSnDataUpdate 
                     </div>
                   </TableCell>
                   <TableCell>
-                    {item.count} ({item.leads_test})
+                    <Badge
+                      style={{ backgroundColor: "#e8fff3", color: "#00a653" }}
+                    >
+                      {item.count} ({item.leads_test})
+                    </Badge>
                   </TableCell>
-                  <TableCell>{item.cpl}</TableCell>
-                  <TableCell>{item.expenses}</TableCell>
+                  <TableCell>
+                    <Badge
+                      style={{ backgroundColor: "#fffbea", color: "#d8a700" }}
+                    >
+                      {item.cpl}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      style={{ backgroundColor: "#e0f2ff", color: "#007bff" }}
+                    >
+                      {item.expenses}
+                    </Badge>
+                  </TableCell>
                   <TableCell>-</TableCell>
                 </TableRow>
               ))}
@@ -248,9 +269,27 @@ export default function TableLead({ selectedVertical, dateRange, onSnDataUpdate 
                     </div>
                   </TableCell>
 
-                  <TableCell>{item.lead}</TableCell>
-                  <TableCell>{item.cpl}</TableCell>
-                  <TableCell>{item.depenses}</TableCell>
+                  <TableCell>
+                    <Badge
+                      style={{ backgroundColor: "#e8fff3", color: "#00a653" }}
+                    >
+                      {item.lead}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      style={{ backgroundColor: "#fffbea", color: "#d8a700" }}
+                    >
+                      {item.cpl}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      style={{ backgroundColor: "#e0f2ff", color: "#007bff" }}
+                    >
+                      {item.depenses}
+                    </Badge>
+                  </TableCell>
                   <TableCell>{item.tx_marge}</TableCell>
                 </TableRow>
               ))}
